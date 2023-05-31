@@ -17,5 +17,11 @@ $(document).ready(function() {
       body: JSON.stringify(datos)
     });
 
-    const respuesta = await request.json();
+    const respuesta = await request.text();
+
+    if (respuesta == 'OK'){
+        window.location.href = 'usuarios.html';
+    }else{
+        alert("Las credenciales son incorrectas");
+    }
   }
