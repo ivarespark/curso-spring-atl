@@ -2,6 +2,7 @@ package com.curso.curso.controllers;
 
 import com.curso.curso.dao.UsuarioDao;
 import com.curso.curso.models.Usuario;
+import com.curso.curso.utils.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +13,8 @@ import java.util.List;
 public class UsuarioController {
     @Autowired
     private UsuarioDao usuarioDao;
+    @Autowired
+    private JWTUtil jwtUtil;
 
     @RequestMapping(value = "prueba")
     public List<String> prueba(){
@@ -30,7 +33,11 @@ public class UsuarioController {
     }
 
     @RequestMapping(value = "api/usuarios")
-    public List<Usuario> getUsuarios(){
+    public List<Usuario> getUsuarios(@RequestHeader(value = "Authorization") String token){
+        String usuarioId = jwtUtil.getKey(token);
+        if (usuarioId == null){
+            return new ArrayList<>();
+        }
         return usuarioDao.getUsuarios();
     }
 
