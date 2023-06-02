@@ -2,7 +2,13 @@
 $(document).ready(function() {
   cargarUsuarios();
   $('#usuarios').DataTable();
+  actualizarEmailUsuario();
+
 });
+
+function actualizarEmailUsuario(){
+  document.getElementById('txt-email-usuario').outerHTML = localStorage.email;
+}
 
 async function cargarUsuarios(){
   const request = await fetch('api/usuarios', { // await espera el resultado

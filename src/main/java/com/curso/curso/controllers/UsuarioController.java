@@ -21,6 +21,11 @@ public class UsuarioController {
         return List.of("Manzana","Kiwi","Banana");
     }
 
+    private boolean validarToken(String token){
+        String usuarioId = jwtUtil.getKey(token);
+        return usuarioId != null;
+    }
+
     @RequestMapping(value = "api/usuario/{id}",method = RequestMethod.GET)
     public Usuario getUsuario(@PathVariable Long id){
         Usuario usuario = new Usuario();
@@ -34,15 +39,13 @@ public class UsuarioController {
 
     @RequestMapping(value = "api/usuarios")
     public List<Usuario> getUsuarios(@RequestHeader(value = "Authorization") String token){
-        String usuarioId = jwtUtil.getKey(token);
-        if (usuarioId == null){
-            return new ArrayList<>();
-        }
+        if (!validarToken(token)){ return null; }
         return usuarioDao.getUsuarios();
     }
 
     @RequestMapping(value = "api/usuario/{id}",method = RequestMethod.DELETE)
-    public void eliminar(@PathVariable Long id){
+    public void eliminar(@RequestHeader(value = "Authorization") String token,@PathVariable Long id){
+        if (!validarToken(token)){ return; }
         usuarioDao.eliminar(id);
     }
 
